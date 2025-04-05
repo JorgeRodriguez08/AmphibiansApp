@@ -9,12 +9,12 @@ import okhttp3.MediaType.Companion.toMediaType
 class AmphibiansAppContainer : AppContainer {
 
     // Base Url
-    private val baseUrl = "https://android-kotlin-fun-mars-server.appspot.com"
+    private val baseUrl = "https://android-kotlin-fun-mars-server.appspot.com/"
 
     // Retrofit
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .baseUrl(baseUrl)
         .build()
 
     // ApiService
