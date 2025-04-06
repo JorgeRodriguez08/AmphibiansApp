@@ -27,6 +27,7 @@ fun AmphibiansApp() {
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { AmphibiansTopAppBar(scrollBehavior = scrollBehavior) }
     ) {
+        innerPadding ->
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -36,7 +37,7 @@ fun AmphibiansApp() {
             AmphibiansScreen(
                 amphibiansUiState = amphibiansViewModel.amphibiansUiState,
                 retryAction = { amphibiansViewModel.getAmphibians() },
-                contentPadding = it
+                contentPadding = innerPadding
             )
         }
     }

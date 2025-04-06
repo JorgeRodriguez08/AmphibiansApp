@@ -1,14 +1,18 @@
 package com.example.amphibiansapp.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,9 +45,16 @@ fun AmphibiansScreen(
 ) {
     when (amphibiansUiState) {
         is AmphibiansUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is AmphibiansUiState.Success -> AmphibiansGridScreen(
+        is AmphibiansUiState.Success -> AmphibiansListScreen(
             amphibians = amphibiansUiState.amphibians,
-            contentPadding = contentPadding, modifier = modifier)
+            contentPadding = contentPadding,
+            modifier = modifier
+                .padding(
+                    start = dimensionResource(R.dimen.padding_medium),
+                    top = dimensionResource(R.dimen.padding_medium),
+                    end = dimensionResource(R.dimen.padding_medium)
+                )
+        )
         is AmphibiansUiState.Error -> ErrorScreen(retryAction = retryAction)
     }
 }
@@ -51,9 +62,9 @@ fun AmphibiansScreen(
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Image(
-        modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.loading_img),
-        contentDescription = stringResource(R.string.loading)
+        contentDescription = stringResource(R.string.loading),
+        modifier = modifier.size(200.dp)
     )
 }
 
@@ -69,23 +80,35 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(
             dimensionResource(R.dimen.padding_large)))
 
-        Button(onClick = retryAction) { Text(text = stringResource(R.string.retry)) }
+        Button(onClick = retryAction) {
+            Text(text = stringResource(R.string.retry))
+        }
     }
 }
 
 @Composable
-fun AmphibiansGridScreen(
+fun AmphibiansListScreen(
     amphibians: List<Amphibian>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.padding(bottom = dimensionResource(R.dimen.padding_large)),
-        contentPadding = contentPadding
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(amphibians) {
-            amphibian -> AmphibianCard(amphibian = amphibian, modifier = modifier)
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_large)),
+            contentPadding = contentPadding,
+            modifier = modifier.fillMaxSize(),
+            state = rememberLazyListState()
+        ) {
+            items(amphibians, key = {amphibian -> amphibian.name}) { amphibian ->
+                AmphibianCard(
+                    amphibian = amphibian,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dimensionResource(R.dimen.padding_large))
+                )
+            }
         }
     }
 }
@@ -97,31 +120,34 @@ fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.padding_small))
     ) {
-        Text(
-            text = stringResource(R.string.amphibians_title, amphibian.name, amphibian.type),
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_large))
-                .align(Alignment.Start)
-
-        )
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current).data(amphibian.imgSrc)
-                .crossfade(true).build(),
-            error = painterResource(R.drawable.ic_broken_image),
-            placeholder = painterResource(R.drawable.loading_img),
-            contentDescription = amphibian.description,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = amphibian.description,
-            textAlign = TextAlign.Justify,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_large))
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.amphibians_title, amphibian.name, amphibian.type),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_large))
+            )
+            AsyncImage(
+                modifier = Modifier.fillMaxWidth(),
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(amphibian.imgSrc)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = amphibian.name,
+                contentScale = ContentScale.Crop,
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
+            )
+            Text(
+                text = amphibian.description,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Justify,
+                //fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_large))
+            )
+        }
     }
 }
+
