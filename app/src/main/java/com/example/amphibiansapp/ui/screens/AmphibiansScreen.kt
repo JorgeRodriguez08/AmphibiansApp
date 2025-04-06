@@ -1,18 +1,14 @@
 package com.example.amphibiansapp.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -92,23 +88,16 @@ fun AmphibiansListScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_large)),
+        contentPadding = contentPadding,
+        modifier = modifier
     ) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_large)),
-            contentPadding = contentPadding,
-            modifier = modifier.fillMaxSize(),
-            state = rememberLazyListState()
-        ) {
-            items(amphibians, key = {amphibian -> amphibian.name}) { amphibian ->
-                AmphibianCard(
-                    amphibian = amphibian,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(R.dimen.padding_large))
-                )
-            }
+        items(items = amphibians) { amphibian ->
+            AmphibianCard(
+                amphibian = amphibian,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -118,7 +107,7 @@ fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
-        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.padding_small))
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.padding_extra_small))
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
@@ -127,7 +116,8 @@ fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
-                    .padding(dimensionResource(R.dimen.padding_large))
+                    .padding(dimensionResource(R.dimen.padding_medium))
+                    .fillMaxWidth()
             )
             AsyncImage(
                 modifier = Modifier.fillMaxWidth(),
@@ -136,7 +126,7 @@ fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
                     .crossfade(true)
                     .build(),
                 contentDescription = amphibian.name,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
             )
@@ -144,8 +134,7 @@ fun AmphibianCard(amphibian: Amphibian, modifier: Modifier = Modifier) {
                 text = amphibian.description,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Justify,
-                //fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(dimensionResource(R.dimen.padding_large))
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
             )
         }
     }

@@ -9,10 +9,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.amphibiansapp.R
@@ -22,14 +20,15 @@ import com.example.amphibiansapp.viewmodel.AmphibiansViewModel
 
 @Composable
 fun AmphibiansApp() {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { AmphibiansTopAppBar(scrollBehavior = scrollBehavior) }
+        modifier = Modifier
+            .fillMaxSize(),
+        topBar = { AmphibiansTopAppBar() }
     ) {
         innerPadding ->
         Surface(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
         ) {
             val amphibiansViewModel: AmphibiansViewModel =
                 viewModel(factory = AmphibiansViewModel.factory)
@@ -37,6 +36,7 @@ fun AmphibiansApp() {
             AmphibiansScreen(
                 amphibiansUiState = amphibiansViewModel.amphibiansUiState,
                 retryAction = { amphibiansViewModel.getAmphibians() },
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = innerPadding
             )
         }
@@ -45,7 +45,7 @@ fun AmphibiansApp() {
 
 
 @Composable
-fun AmphibiansTopAppBar(scrollBehavior: TopAppBarScrollBehavior, modifier: Modifier = Modifier ) {
+fun AmphibiansTopAppBar() {
     MediumTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface
