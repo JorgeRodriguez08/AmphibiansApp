@@ -16,9 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AmphibiansAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     AmphibiansApp()
                 }
             }

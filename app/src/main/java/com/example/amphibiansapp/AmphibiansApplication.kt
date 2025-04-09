@@ -1,8 +1,8 @@
 package com.example.amphibiansapp
 
 import android.app.Application
-import com.example.amphibiansapp.data.AppContainer
 import com.example.amphibiansapp.data.AmphibiansAppContainer
+import com.example.amphibiansapp.data.AppContainer
 
 class AmphibiansApplication : Application() {
     // Create variable container

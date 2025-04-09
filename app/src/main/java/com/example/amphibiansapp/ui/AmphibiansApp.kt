@@ -2,6 +2,7 @@
 package com.example.amphibiansapp.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
@@ -21,14 +22,13 @@ import com.example.amphibiansapp.viewmodel.AmphibiansViewModel
 @Composable
 fun AmphibiansApp() {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = { AmphibiansTopAppBar() }
     ) {
-        innerPadding ->
+            innerPadding ->
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.surface
         ) {
             val amphibiansViewModel: AmphibiansViewModel =
                 viewModel(factory = AmphibiansViewModel.factory)
@@ -43,17 +43,15 @@ fun AmphibiansApp() {
     }
 }
 
-
 @Composable
 fun AmphibiansTopAppBar() {
-    MediumTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary),
         title = {
             Text(
                 text = stringResource(R.string.amphibians),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.background
             )
         }
     )

@@ -1,7 +1,7 @@
 package com.example.amphibiansapp.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 
 @Serializable
